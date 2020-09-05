@@ -6,7 +6,7 @@ const closeDivTextBox = document.querySelector('.close')
 const selectElement = document.querySelector('select')
 const textArea = document.querySelector('textarea')
 
-const humanExpression = [
+const humanExpressions = [
   { img: './img/drink.jpg', text: 'Estou com sede' },
   { img: './img/food.jpg', text: 'Estou com fome' },
   { img: './img/tired.jpg', text: 'Estou cansado' },
@@ -32,12 +32,12 @@ const speakText = () => {
 }
 
 const setVoice = event => {
-  const selectedVoice = utterance.voice = voices.find(voice =>
-    voice.name === event.target.value)
+  const selectedVoice = voices.find(voice => voice.name === event.target.value)
+  utterance.voice = selectedVoice
 }
 
-const addExpressionBoxesIntoDOM = () => {
-  main.innerHTML = humanExpression.map(({ img, text }) => `
+const addExpressionBoxesIntoDom = () => {
+  main.innerHTML = humanExpressions.map(({ img, text }) => `
     <div class="expression-box" data-js="${text}">
       <img src="${img}" alt="${text}" data-js="${text}">
       <p class="info" data-js="${text}">${text}</p>
@@ -45,7 +45,7 @@ const addExpressionBoxesIntoDOM = () => {
   `).join('')
 }
 
-addExpressionBoxesIntoDOM()
+addExpressionBoxesIntoDom()
 
 const setStyleOfClickedDiv = dataValue => {
   const div = document.querySelector(`[data-js="${dataValue}"]`)
@@ -59,7 +59,7 @@ main.addEventListener('click', event => {
   const clickedElement = event.target
   const clickedElementText = clickedElement.dataset.js
   const clickedElementTextMustBeSpoken = ['img', 'p'].some(elementName =>
-    clickedElement.tagName.toLowerCase() === elementName.toLowerCase)
+    clickedElement.tagName.toLowerCase() === elementName.toLowerCase())
 
   if (clickedElementTextMustBeSpoken) {
     setTextMessage(clickedElementText)
@@ -68,9 +68,9 @@ main.addEventListener('click', event => {
   }
 })
 
-const insertOptionElementsIntoDom = voices => {
+const insertOptionElementIntoDOM = voices => {
   selectElement.innerHTML = voices.reduce((accumulator, { name, lang }) => {
-    accumulator += `<option value="${name}">${lang} | ${name}</option>`
+    accumulator += `<option value="${name}">${name} | ${lang}</option>`
     return accumulator
   }, '')
 }
@@ -100,7 +100,7 @@ let voices = []
 speechSynthesis.addEventListener('voiceschanged', () => {
   voices = speechSynthesis.getVoices()
 
-  insertOptionElementsIntoDom(voices)
+  insertOptionElementIntoDOM(voices)
   setPTBRVoices(voices)
 })
 
